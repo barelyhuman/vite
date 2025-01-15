@@ -3,9 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "devDependencies": {
-    "@biomejs/biome": "^1.9.4"
+    "@biomejs/biome": "^1.9.4",
+    "@changesets/cli": "^2.27.11"
   },
   "scripts": {
-    "build":"pnpm -r build"
+    "build": "pnpm -r build"
   }
 }
