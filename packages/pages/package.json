@@ -8,6 +8,9 @@
       "import": "./dist/main.js"
     }
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsup"
   },
