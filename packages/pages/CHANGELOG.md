@@ -1,5 +1,12 @@
 # @barelyhuman/vite-routes
 
+## 0.0.3
+
+### Patch Changes
+
+- d9a6c41: added exclusion
+- 16a561d: Allow lower versions of vite
+
 ## 0.0.2
 
 ### Patch Changes
