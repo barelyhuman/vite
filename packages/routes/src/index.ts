@@ -45,9 +45,10 @@ export default function routes({
         .filter((d) => !isExcluded(d.replace(projectRoot, "")))
         .map((d) => d.replace(projectRoot, ""));
 
-      const normalizedPaths = usableMatches.map(d => d.startsWith("/") ? d.slice(1) : d)
+      const normalizedPathsForRegex = usableMatches.map(d => d.startsWith("/") ? d.slice(1) : d)
+      const normalizedRootForRegex = !root.endsWith("/") ? `${root}/` : root
 
-      const globRegex = `${root}(${normalizedPaths.join("|")})`;
+      const globRegex = `${normalizedRootForRegex}(${normalizedPathsForRegex.join("|")})`;
       const code = (
         await readFile(join(__dirname, "./runtime/pages.js"), "utf8")
       )
