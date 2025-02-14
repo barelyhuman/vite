@@ -16,10 +16,13 @@ export default function routes({
   root = "/src/pages",
   id: virtualId = "~routes",
   extensions = ["js", "ts", "tsx", "jsx"],
-  replacer = "",
+  /**@deprecated use `baseURL` instead */
+  replacer: _replacer = "",
+  baseURL = "",
   isExcluded = (filepath: string) => false,
 } = {}): Plugin {
   let cfg: { root: string };
+  const replacer = baseURL ?? _replacer;
   return {
     name: "barelyhuman-pages",
     enforce: "pre",
@@ -45,10 +48,14 @@ export default function routes({
         .filter((d) => !isExcluded(d.replace(projectRoot, "")))
         .map((d) => d.replace(projectRoot, ""));
 
-      const normalizedPathsForRegex = usableMatches.map(d => d.startsWith("/") ? d.slice(1) : d)
-      const normalizedRootForRegex = !root.endsWith("/") ? `${root}/` : root
+      const normalizedPathsForRegex = usableMatches.map((d) =>
+        d.startsWith("/") ? d.slice(1) : d
+      );
+      const normalizedRootForRegex = !root.endsWith("/") ? `${root}/` : root;
 
-      const globRegex = `${normalizedRootForRegex}(${normalizedPathsForRegex.join("|")})`;
+      const globRegex = `${normalizedRootForRegex}(${normalizedPathsForRegex.join(
+        "|"
+      )})`;
       const code = (
         await readFile(join(__dirname, "./runtime/pages.js"), "utf8")
       )
@@ -73,7 +80,7 @@ async function readdirRecursive(dir) {
       if (_stat.isDirectory()) {
         results.push(...(await readdirRecursive(withRoot)));
       } else results.push(withRoot);
-    }),
+    })
   );
   return results;
 }
