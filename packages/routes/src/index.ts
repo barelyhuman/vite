@@ -12,6 +12,16 @@ export type RouteDefinitions<T> = {
   module: () => Promise<T>;
 };
 
+type Options = {
+  root?: string;
+  id?: string;
+  extensions?: string[];
+  /**@deprecated use `baseURL` instead */
+  replacer?: string;
+  baseURL?: string;
+  isExcluded?: (filepath: string) => boolean;
+};
+
 export default function routes({
   root = "/src/pages",
   id: virtualId = "~routes",
@@ -20,7 +30,7 @@ export default function routes({
   replacer: _replacer = "",
   baseURL = "",
   isExcluded = (filepath: string) => false,
-} = {}): Plugin {
+}: Options = {}): Plugin {
   let cfg: { root: string };
   const replacer = baseURL ?? _replacer;
   return {
