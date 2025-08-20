@@ -30,17 +30,17 @@ export type Options = {
 	debug?: boolean;
 };
 
-export const islandsPlugin = (options?: Options): Plugin => {
+export const islandsPlugin = (options: Options = {}): Plugin => {
 	let isBuild = false;
 	let viteRootDir: string;
 	let viteOutDir: string;
-	const islandsDist = options.outDir || "islands";
+	const islandsDist = options?.outDir || "islands";
 	let runningIslandBuild = false;
 	let islandsTmpDir: string;
 	const transpiledIdentifiers =
-		options.transpiledIdentifiers || DEFAULT_TRANSPILED_IDENTIFIERS;
-	const virtualModulePrefix = options.virtualModulePrefix || "virtual:island-";
-	const debug = !!options.debug;
+		options?.transpiledIdentifiers || DEFAULT_TRANSPILED_IDENTIFIERS;
+	const virtualModulePrefix = options?.virtualModulePrefix || "virtual:island-";
+	const debug = !!options?.debug;
 
 	const islReg = new IslandRegistry(virtualModulePrefix);
 
@@ -60,7 +60,7 @@ export const islandsPlugin = (options?: Options): Plugin => {
 			viteRootDir = cfg.root || process.cwd();
 			viteOutDir = cfg.build?.outDir ?? viteOutDir;
 
-			islandsTmpDir = join(viteRootDir, options.islandsTmpDir || ".islands");
+			islandsTmpDir = join(viteRootDir, options?.islandsTmpDir || ".islands");
 			logDebug("config:", { viteRootDir, viteOutDir, isBuild, islandsTmpDir });
 		},
 		load: islReg.createViteLoad(),
