@@ -1,14 +1,14 @@
 import { existsSync } from "node:fs";
+import { readFile, readdir } from "node:fs/promises";
+import { join } from "node:path";
+import type { DirectoryResult } from "tmp-promise";
+import { afterEach, beforeEach, expect, test } from "vitest";
 import {
 	loadFixture,
 	setupTest,
 	teardownTest,
 	viteBuild,
 } from "./lib/setup.js";
-import { readdir, readFile } from "node:fs/promises";
-import { join } from "node:path";
-import type { DirectoryResult } from "tmp-promise";
-import { afterEach, beforeEach, expect, test } from "vitest";
 
 type TestCtx = { env: { tmp: DirectoryResult } };
 
@@ -39,6 +39,7 @@ test(".islands are generated on build | smoke", async (ctx: TestCtx) => {
 	).toMatchInlineSnapshot(`
 		[
 		  "island-counter--4218868510.js",
+		  "island-counter-6904939328.js",
 		]
 	`);
 
@@ -46,15 +47,14 @@ test(".islands are generated on build | smoke", async (ctx: TestCtx) => {
 		join(ctx.env.tmp.path, ".islands", "island-counter--4218868510.js"),
 		"utf8",
 	);
-	
+
 	// web component is declared properly
-	expect(islandFile).includes("customElements.define(\"island-counter\",")
+	expect(islandFile).includes('customElements.define("island-counter",');
 
 	// utilities are inlines
-	expect(islandFile).includes("const restoreTree = (type, props = {}) => {")
+	expect(islandFile).includes("const restoreTree = (type, props = {}) => {");
 
-	// deps were injected 
-	expect(islandFile).includes("import { render, h } from 'preact';")
+	// deps were injected
+	expect(islandFile).includes("import { render, h } from 'preact';");
 });
-
 
