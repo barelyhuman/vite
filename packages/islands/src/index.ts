@@ -79,6 +79,9 @@ export const islandsPlugin = (options: Options = {}): Plugin => {
 			logDebug("found islands:", { id, count: islands.length, islands });
 			if (!islands.length) return;
 
+			const hashableFilePath = id.replace(viteRootDir,"")
+
+			
 			for (const node of islands) {
 				//@ts-expect-error FIX: in preland
 				injectIslandAST(node.ast, node);
@@ -87,7 +90,8 @@ export const islandsPlugin = (options: Options = {}): Plugin => {
 					id,
 				);
 
-				const hashedId = islReg.register(id, node.id, clientCode);
+				
+				const hashedId = islReg.register(hashableFilePath, node.id, clientCode);
 
 				mkdirSync(islandsTmpDir, { recursive: true });
 				const islandTempFileOutPath = join(
@@ -114,7 +118,7 @@ export const islandsPlugin = (options: Options = {}): Plugin => {
 						? `/${islReg.virtualPath(id, island.id)}`
 						: `/islands/${getIslandName(
 								island.id,
-								islReg.getHash(id, island.id),
+								islReg.getHash(hashableFilePath, island.id),
 							)}.js`,
 				);
 				logDebug("server template placeholder replaced:", {
