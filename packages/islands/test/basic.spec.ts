@@ -34,6 +34,7 @@ test(".islands are generated on build | smoke", async (ctx: TestCtx) => {
 
 	expect(existsSync(join(ctx.env.tmp.path, ".islands"))).toBeTruthy();
 
+	// To check if the output files are being hashed
 	expect(
 		await readdir(join(ctx.env.tmp.path, ".islands")),
 	).toMatchInlineSnapshot(`
@@ -48,13 +49,26 @@ test(".islands are generated on build | smoke", async (ctx: TestCtx) => {
 		"utf8",
 	);
 
-	// web component is declared properly
+	const islandWithSameNamedComponent = await readFile(
+		join(ctx.env.tmp.path, ".islands", "island-counter-6904939328.js"),
+		"utf8",
+	);
+
+	// web components are declared properly
 	expect(islandFile).includes('customElements.define("island-counter",');
+	expect(islandWithSameNamedComponent).includes(
+		'customElements.define("island-counter-1",',
+	);
 
 	// utilities are inlines
 	expect(islandFile).includes("const restoreTree = (type, props = {}) => {");
+	expect(islandWithSameNamedComponent).includes(
+		"const restoreTree = (type, props = {}) => {",
+	);
 
 	// deps were injected
 	expect(islandFile).includes("import { render, h } from 'preact';");
+	expect(islandWithSameNamedComponent).includes(
+		"import { render, h } from 'preact';",
+	);
 });
-

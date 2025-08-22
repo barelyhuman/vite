@@ -1,5 +1,5 @@
 import {
-	getIslandName as _getIslandName,
+	getIslandName as getPrelandIslandName,
 	findIslands,
 	generateClientTemplate,
 	getServerTemplatePlaceholder,
@@ -79,24 +79,30 @@ export const islandsPlugin = (options: Options = {}): Plugin => {
 			logDebug("found islands:", { id, count: islands.length, islands });
 			if (!islands.length) return;
 
-			const hashableFilePath = id.replace(viteRootDir,"")
+			const hashableFilePath = id.replace(viteRootDir, "");
 
-			
 			for (const node of islands) {
 				//@ts-expect-error FIX: in preland
 				injectIslandAST(node.ast, node);
-				const clientCode = generateClientTemplate(node.id).replace(
+				let clientCode = generateClientTemplate(node.id).replace(
 					IMPORT_PATH_PLACEHOLDER,
 					id,
 				);
 
-				
-				const hashedId = islReg.register(hashableFilePath, node.id, clientCode);
+				const definitionRegex = new RegExp(
+					`\"(${getPrelandIslandName(node.id)})\"`,
+					"g",
+				);
+
+				const hashedId = islReg.getHash(hashableFilePath, node.id);
+				const islandName = islReg.getIslandName(hashableFilePath, node.id);
+				clientCode = clientCode.replace(definitionRegex, `"${islandName}"`);
+				islReg.register(hashableFilePath, node.id, clientCode);
 
 				mkdirSync(islandsTmpDir, { recursive: true });
 				const islandTempFileOutPath = join(
 					islandsTmpDir,
-					`${getIslandName(node.id, hashedId)}.js`,
+					`${getSuffixedIslandName(node.id, hashedId)}.js`,
 				);
 				writeFileSync(islandTempFileOutPath, clientCode, "utf8");
 
@@ -116,7 +122,7 @@ export const islandsPlugin = (options: Options = {}): Plugin => {
 					getServerTemplatePlaceholder(island.id),
 					!isBuild
 						? `/${islReg.virtualPath(id, island.id)}`
-						: `/islands/${getIslandName(
+						: `/islands/${getSuffixedIslandName(
 								island.id,
 								islReg.getHash(hashableFilePath, island.id),
 							)}.js`,
@@ -163,7 +169,7 @@ export const islandsPlugin = (options: Options = {}): Plugin => {
 									},
 									input: Object.fromEntries(
 										[...islReg.islandsByHash.entries()].map(([k, v]) => {
-											const key = getIslandName(v.id, k);
+											const key = getSuffixedIslandName(v.id, k);
 											logDebug("rollup input:", {
 												key,
 												file: join(islandsTmpDir, `${key}.js`),
@@ -182,9 +188,10 @@ export const islandsPlugin = (options: Options = {}): Plugin => {
 	};
 };
 
-function getIslandName(id: string, suffix: string) {
-	const baseId = _getIslandName(id);
-	return `${baseId}-${String(suffix)}`;
+function getSuffixedIslandName(id: string, suffix: string) {
+	const baseId = getPrelandIslandName(id);
+	if (suffix) return `${baseId}-${String(suffix)}`;
+	return `${baseId}`;
 }
 
 function hash(toHash): string {
@@ -202,9 +209,45 @@ function hash(toHash): string {
 class IslandRegistry {
 	islandsByHash = new Map();
 	virtualModulePrefix = "";
+	counters = [];
 
 	constructor(virtualModulePrefix) {
 		this.virtualModulePrefix = virtualModulePrefix;
+	}
+
+	getId(file, id, findAt = 0) {
+		if (!this.counters[findAt]) {
+			this.counters[findAt] = [];
+		}
+
+		const nameMatch = this.counters[findAt].findIndex((d) => d.id === id);
+
+		if (nameMatch > -1) {
+			const matchedSet = this.counters[findAt][nameMatch];
+			if (matchedSet.file === file) {
+				// same file, same name
+				return findAt;
+			}
+			// diff file, same name
+			return this.getId(file, id, findAt + 1);
+		}
+
+		// name hasn't matched, push on findAt
+		this.counters[findAt].push({
+			id: id,
+			file: file,
+		});
+
+		return findAt;
+	}
+
+	getIslandName(file, id) {
+		const counter = this.getId(file, id);
+		let suffix = undefined;
+		if (counter > 0) {
+			suffix = counter;
+		}
+		return getSuffixedIslandName(id, suffix);
 	}
 
 	register(file, id, code) {
