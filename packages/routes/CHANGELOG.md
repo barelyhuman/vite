@@ -1,5 +1,11 @@
 # @barelyhuman/vite-routes
 
+## 0.0.5
+
+### Patch Changes
+
+- 765e0f6: Sanitize regex paths
+
 ## 0.0.4
 
 ### Patch Changes
