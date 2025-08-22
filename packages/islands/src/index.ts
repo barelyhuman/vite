@@ -118,15 +118,25 @@ export const islandsPlugin = (options: Options = {}): Plugin => {
 
 			let serverTemplateCode = codeFromAST(islands[0].ast);
 			for (const island of islands) {
-				serverTemplateCode = serverTemplateCode.replace(
-					getServerTemplatePlaceholder(island.id),
-					!isBuild
-						? `/${islReg.virtualPath(id, island.id)}`
-						: `/islands/${getSuffixedIslandName(
-								island.id,
-								islReg.getHash(hashableFilePath, island.id),
-							)}.js`,
+				const serverIslandNameRegex = new RegExp(
+					`h\\(\"${getPrelandIslandName(island.id)}\"`,
+					"g",
 				);
+				serverTemplateCode = serverTemplateCode
+					.replace(
+						getServerTemplatePlaceholder(island.id),
+						!isBuild
+							? `/${islReg.virtualPath(hashableFilePath, island.id)}`
+							: `/islands/${getSuffixedIslandName(
+									island.id,
+									islReg.getHash(hashableFilePath, island.id),
+								)}.js`,
+					)
+					.replace(
+						serverIslandNameRegex,
+						`h("${islReg.getIslandName(hashableFilePath, island.id)}"`,
+					);
+				console.log({ serverTemplateCode });
 				logDebug("server template placeholder replaced:", {
 					islandId: island.id,
 				});
@@ -302,6 +312,11 @@ class IslandRegistry {
 
 	virtualPath(file, id) {
 		const hashId = this.getHash(file, id);
+		if (!this.islandsByHash.has(hashId)) {
+			throw new Error(
+				`Island for file:${file} and component:${id} have not been registered`,
+			);
+		}
 		return this.islandsByHash.get(hashId).virtId;
 	}
 

@@ -20,7 +20,7 @@
 		"@biomejs/biome": "^1.9.4",
 		"@preact/preset-vite": "^2.10.2",
 		"@types/node": "20",
-		"preact": "^10.27.1",
+		"preact": "catalog:",
 		"preact-render-to-string": "^6.6.1",
 		"tmp-promise": "^3.0.3",
 		"tsup": "^8.3.5",
@@ -31,7 +31,7 @@
 	},
 	"peerDependencies": {
 		"@preact/preset-vite": ">=2",
-		"preact": "^10.27.1",
+		"preact": "catalog:",
 		"vite": ">=5"
 	},
 	"dependencies": {

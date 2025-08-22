@@ -1,2 +1,6 @@
-packages: 
+packages:
   - ./packages/**
+  - ./examples/**
+
+catalog:
+  preact: "^10.27.1"
