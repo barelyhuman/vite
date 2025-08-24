@@ -13,7 +13,7 @@
     "preact-render-to-string": "^6.6.1"
   },
   "devDependencies": {
-    "@barelyhuman/vite-islands": "workspace:*",
+    "@barelyhuman/vite-islands-preact": "workspace:*",
     "@preact/preset-vite": "^2.10.2",
     "vite": "^7.1.2"
   }

@@ -1,4 +1,4 @@
-# @barelyhuman/vite-islands
+# @barelyhuman/vite-islands-preact
 
 ## 0.0.2
 

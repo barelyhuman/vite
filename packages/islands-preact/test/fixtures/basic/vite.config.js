@@ -1,6 +1,6 @@
 import { defineConfig } from "vite";
 import preact from "@preact/preset-vite";
-import { islandsPlugin } from "@barelyhuman/vite-islands";
+import { islandsPlugin } from "@barelyhuman/vite-islands-preact";
 import { renderToString } from "preact-render-to-string";
 import { h } from "preact";
 

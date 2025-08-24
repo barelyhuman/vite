@@ -8,7 +8,7 @@ const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
 export async function copyDependencies(cwd) {
 	await fs.mkdir(
-		path.join(cwd, "node_modules", "@barelyhuman", "vite-islands"),
+		path.join(cwd, "node_modules", "@barelyhuman", "vite-islands-preact"),
 		{
 			recursive: true,
 		},
@@ -17,7 +17,7 @@ export async function copyDependencies(cwd) {
 	// Copy module to tmp dir
 	await fs.cp(
 		path.join(__dirname, "..", "..", "dist"),
-		path.join(cwd, "node_modules", "@barelyhuman", "vite-islands", "dist"),
+		path.join(cwd, "node_modules", "@barelyhuman", "vite-islands-preact", "dist"),
 		{ recursive: true },
 	);
 	await fs.copyFile(
@@ -26,7 +26,7 @@ export async function copyDependencies(cwd) {
 			cwd,
 			"node_modules",
 			"@barelyhuman",
-			"vite-islands",
+			"vite-islands-preact",
 			"package.json",
 		),
 	);

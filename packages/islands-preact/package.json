@@ -1,5 +1,5 @@
 {
-	"name": "@barelyhuman/vite-islands",
+	"name": "@barelyhuman/vite-islands-preact",
 	"version": "0.0.2",
 	"type": "module",
 	"exports": {

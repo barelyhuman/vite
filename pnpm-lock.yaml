@@ -30,9 +30,9 @@ importers:
         specifier: ^6.6.1
         version: 6.6.1(preact@10.27.1)
     devDependencies:
-      '@barelyhuman/vite-islands':
+      '@barelyhuman/vite-islands-preact':
         specifier: workspace:*
-        version: link:../../packages/islands
+        version: link:../../packages/islands-preact
       '@preact/preset-vite':
         specifier: ^2.10.2
         version: 2.10.2(@babel/core@7.28.3)(preact@10.27.1)(vite@7.1.3(jiti@1.21.7))
@@ -40,7 +40,7 @@ importers:
         specifier: ^7.1.2
         version: 7.1.3(@types/node@20.17.10)(jiti@1.21.7)
 
-  packages/islands:
+  packages/islands-preact:
     dependencies:
       '@dumbjs/preland':
         specifier: ^0.0.2
