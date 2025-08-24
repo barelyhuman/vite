@@ -136,7 +136,6 @@ export const islandsPlugin = (options: Options = {}): Plugin => {
 						serverIslandNameRegex,
 						`h("${islReg.getIslandName(hashableFilePath, island.id)}"`,
 					);
-				console.log({ serverTemplateCode });
 				logDebug("server template placeholder replaced:", {
 					islandId: island.id,
 				});
