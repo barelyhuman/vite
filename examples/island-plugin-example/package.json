@@ -1,5 +1,5 @@
 {
-  "name": "island-example",
+  "name": "island-preact-example",
   "private": true,
   "version": "0.0.1",
   "type": "module",
@@ -9,11 +9,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "esbuild": "^0.25.9",
     "preact": "catalog:",
     "preact-render-to-string": "^6.6.1"
   },
   "devDependencies": {
-    "@barelyhuman/vite-islands-preact": "workspace:*",
+    "@barelyhuman/vite-islands": "workspace:*",
+    "@dumbjs/preland": "^0.0.2",
     "@preact/preset-vite": "^2.10.2",
     "vite": "^7.1.2"
   }
