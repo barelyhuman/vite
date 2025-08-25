@@ -1,0 +1,32 @@
+{
+	"name": "@barelyhuman/vite-islands",
+	"version": "0.0.2",
+	"type": "module",
+	"exports": {
+		"./package.json": "./package.json",
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		}
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"scripts": {
+		"build": "tsup",
+		"test": "pnpm build && vitest"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^1.9.4",
+		"@types/node": "20",
+		"tmp-promise": "^3.0.3",
+		"tsup": "^8.3.5",
+		"typescript": "^5.7.2",
+		"vite": "^5",
+		"vite-test-utils": "^0.6.0",
+		"vitest": "^3.2.4"
+	},
+	"peerDependencies": {
+		"vite": ">=5"
+	}
+}
